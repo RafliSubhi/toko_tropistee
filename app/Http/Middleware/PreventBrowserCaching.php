@@ -18,15 +18,8 @@ class PreventBrowserCaching
     {
         $response = $next($request);
 
-        // Do not add headers to file downloads, as they don't support it.
-        if ($response instanceof \Symfony\Component\HttpFoundation\BinaryFileResponse) {
-            return $response;
-        }
-
-        return $response->withHeaders([
-            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
-            'Pragma' => 'no-cache',
-            'Expires' => 'Sat, 01 Jan 2000 00:00:00 GMT',
-        ]);
+        return $response->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+                        ->header('Pragma', 'no-cache')
+                        ->header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT');
     }
 }

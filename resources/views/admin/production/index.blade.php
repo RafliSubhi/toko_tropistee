@@ -25,9 +25,10 @@
             <!-- Filters and Search -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <div class="d-flex flex-wrap">
-                    <a href="{{ route('admin.production.index') }}" class="btn btn-outline-primary me-2 mb-2 {{ !request('status') ? 'active' : '' }}">Semua</a>
-                    <a href="{{ route('admin.production.index', ['status' => 'accepted']) }}" class="btn btn-outline-primary me-2 mb-2 {{ request('status') == 'accepted' ? 'active' : '' }}">Diterima</a>
-                    <a href="{{ route('admin.production.index', ['status' => 'processing']) }}" class="btn btn-outline-primary me-2 mb-2 {{ request('status') == 'processing' ? 'active' : '' }}">Sedang Diproses</a>
+                    <a href="{{ route('admin.production.index') }}" class="btn btn-outline-primary me-2 mb-2 {{ !request('filter') ? 'active' : '' }}">Semua</a>
+                    <a href="{{ route('admin.production.index', ['filter' => 'unpaid']) }}" class="btn btn-outline-danger me-2 mb-2 {{ request('filter') == 'unpaid' ? 'active' : '' }}">Belum Lunas</a>
+                    <a href="{{ route('admin.production.index', ['filter' => 'paid']) }}" class="btn btn-outline-success me-2 mb-2 {{ request('filter') == 'paid' ? 'active' : '' }}">Lunas</a>
+                    <a href="{{ route('admin.production.index', ['filter' => 'processing']) }}" class="btn btn-outline-primary me-2 mb-2 {{ request('filter') == 'processing' ? 'active' : '' }}">Sedang Diproses</a>
                 </div>
                 <form method="GET" action="{{ route('admin.production.index') }}" class="d-flex ms-auto mb-2">
                     <input type="text" name="search" class="form-control me-2" placeholder="Cari email..." value="{{ request('search') }}">
@@ -36,7 +37,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle" width="100%" cellspacing="0">
+                <table class="table table-hover align-middle" cellspacing="0">
                     <thead class="table-light">
                         <tr>
                             <th>ID</th>
@@ -76,6 +77,18 @@
                                     <button type="button" class="btn btn-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#showOrderModal{{ $order->id }}">
                                         <i class="bi bi-eye-fill"></i> Detail
                                     </button>
+                                    @if(Auth::guard('admin')->user()->role == 'utama')
+                                    <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-warning btn-sm me-2">
+                                        <i class="bi bi-pencil-fill"></i> Edit
+                                    </a>
+                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Anda yakin ingin menghapus pesanan ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash-fill"></i> Hapus
+                                        </button>
+                                    </form>
+                                    @endif
                                     @if ($order->status == 'accepted')
                                         @php
                                             $canBeProcessed = ($order->payment_status == 'paid' || strtolower($order->payment_method) == 'cod');

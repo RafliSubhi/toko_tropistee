@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->boolean('is_hidden_from_history')->default(false)->after('total_price');
-        });
+        if (!Schema::hasColumn('orders', 'is_hidden_from_history')) {
+            Schema::table('orders', function (Blueprint $table) {
+                $table->boolean('is_hidden_from_history')->default(false)->after('total_price');
+            });
+        }
     }
 
     /**

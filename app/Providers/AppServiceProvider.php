@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('layouts.app', function ($view) {
+        View::composer(['layouts.app', 'auth.login', 'auth.register', 'layouts.partials.footer'], function ($view) {
             $view->with('logo', Logo::first());
 
             if (Auth::guard('pengunjung')->check()) {

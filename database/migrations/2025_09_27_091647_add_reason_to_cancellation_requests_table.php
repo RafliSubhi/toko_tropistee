@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->boolean('is_hidden_from_history')->default(false)->after('status');
+        Schema::table('cancellation_requests', function (Blueprint $table) {
+            $table->text('reason')->nullable()->after('order_id');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('is_hidden_from_history');
+        Schema::table('cancellation_requests', function (Blueprint $table) {
+            $table->dropColumn('reason');
         });
     }
 };

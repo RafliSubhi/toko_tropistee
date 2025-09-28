@@ -48,7 +48,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle" width="100%" cellspacing="0">
+                <table class="table table-hover align-middle" cellspacing="0">
                     <thead class="table-light">
                         <tr>
                             <th>ID</th>
@@ -69,7 +69,7 @@
                                 <td class="text-center"><span class="badge bg-success">{{ $order->indonesian_status }}</span></td>
                                 <td class="text-center">
                                     <button type="button" class="btn btn-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#showOrderModal{{ $order->id }}"><i class="bi bi-eye-fill"></i></button>
-                                    <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editOrderModal{{ $order->id }}"><i class="bi bi-pencil-square"></i></button>
+                                    <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-warning btn-sm me-2"><i class="bi bi-pencil-square"></i></a>
                                     <form action="{{ route('admin.financial.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini? Ini tidak bisa dikembalikan.');">
                                         @csrf
                                         @method('DELETE')
@@ -168,35 +168,7 @@
     </div>
 </div>
 
-<!-- Edit Order Modal -->
-<div class="modal fade" id="editOrderModal{{ $order->id }}" tabindex="-1" aria-labelledby="editOrderModalLabel{{ $order->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editOrderModalLabel{{ $order->id }}">Edit Total Saldo Pesanan #{{ $order->id }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="{{ route('admin.financial.updateTotalPrice', $order->id) }}" method="POST">
-                @csrf
-                @method('PATCH')
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="total_price_{{ $order->id }}" class="form-label">Total Harga</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" name="total_price" id="total_price_{{ $order->id }}" class="form-control" value="{{ $order->total_price }}" required>
-                        </div>
-                    </div>
-                    <small class="text-muted">Perubahan ini hanya akan mengubah angka di riwayat, tidak akan memengaruhi total saldo keseluruhan yang sudah tercatat.</small>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+
 @endforeach
 @endsection
 

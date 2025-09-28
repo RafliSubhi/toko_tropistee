@@ -70,26 +70,3 @@
 </div>
 @endsection
 
-@push('styles')
-<style>
-    .section {
-        padding: 60px 0;
-    }
-    .card {
-        transition: transform 0.2s ease-in-out;
-    }
-    .map-responsive {
-        overflow: hidden;
-        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-        position: relative;
-        height: 0;
-    }
-    .map-responsive iframe {
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 100%;
-        position: absolute;
-    }
-</style>
-@endpush

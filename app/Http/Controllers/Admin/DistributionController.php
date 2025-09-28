@@ -63,6 +63,10 @@ class DistributionController extends Controller
             ]);
         }
 
+        if ($newStatus === 'completed') {
+            return redirect()->route('admin.financial.index')->with('success', 'Status pesanan #' . $order->id . ' berhasil diperbarui dan dipindahkan ke Finansial.');
+        }
+
         return redirect()->route('admin.distribution.index')->with('success', 'Status pesanan #' . $order->id . ' berhasil diperbarui.');
     }
 }

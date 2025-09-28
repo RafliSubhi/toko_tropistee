@@ -37,6 +37,20 @@
                                 <td>{{ $order->name ?? 'N/A' }}</td>
                                 <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                 <td class="text-center"><span class="badge bg-danger">{{ $order->indonesian_status }}</span></td>
+                                <td class="text-center">
+                                    @if(Auth::guard('admin')->user()->role == 'utama')
+                                    <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-warning btn-sm me-2">
+                                        <i class="bi bi-pencil-fill"></i> Edit
+                                    </a>
+                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Anda yakin ingin menghapus pesanan ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash-fill"></i> Hapus
+                                        </button>
+                                    </form>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>

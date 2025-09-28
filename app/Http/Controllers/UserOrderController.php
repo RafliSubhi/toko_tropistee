@@ -67,7 +67,14 @@ class UserOrderController extends Controller
         // Fetch all settings to make them available in the view
         $settings = Setting::pluck('value', 'key');
 
-        return view('pesanan-saya.pembayaran', compact('order', 'settings'));
+        $qrCodePath = null;
+        $paymentMethod = strtolower($order->payment_method);
+
+        if (in_array($paymentMethod, ['dana', 'gopay', 'ovo'])) {
+            $qrCodePath = $settings->get($paymentMethod . '_qr_code');
+        }
+
+        return view('pesanan-saya.pembayaran', compact('order', 'settings', 'qrCodePath'));
     }
 
     // Cancel an order
@@ -102,19 +109,24 @@ class UserOrderController extends Controller
             abort(403);
         }
 
-        if ($order->status_pembayaran !== 'unpaid') {
+        if ($order->payment_status !== 'unpaid') {
             return back()->with('error', 'Status pembayaran pesanan ini tidak dapat diubah.');
         }
 
-        $order->status_pembayaran = 'waiting_confirmation';
+        $request->validate([
+            'nama_pengguna' => 'required|string|max:255',
+        ]);
+
+        $order->payment_status = 'waiting_confirmation';
+        $order->nama_pengguna = $request->nama_pengguna;
         $order->save();
 
         Notification::create([
             'message' => 'Konfirmasi pembayaran untuk Pesanan #' . $order->id . ' telah diterima.',
-            'link' => route('admin.payment.index'),
+            'link' => route('admin.payment_confirmation.index'),
         ]);
 
-        return redirect()->route('pesanan-saya.show', $order)->with('success', 'Konfirmasi pembayaran telah dikirim. Admin akan segera memverifikasi pembayaran Anda.');
+        return redirect()->route('pengunjung.pesanan-saya.index')->with('success', 'Konfirmasi pembayaran telah dikirim. Admin akan segera memverifikasi pembayaran Anda.');
     }
 
     // Display user's order history (completed orders)
@@ -173,11 +185,25 @@ class UserOrderController extends Controller
         return redirect()->route('pesanan-saya.index');
     }
 
+    public function showCancellationReasonForm(Order $order)
+    {
+        // Ensure the user can only see their own order
+        if ($order->pengunjung_id !== Auth::guard('pengunjung')->id()) {
+            abort(403);
+        }
+
+        return view('pesanan-saya.cancel-reason', compact('order'));
+    }
+
     public function requestCancellation(Request $request, Order $order)
     {
         if ($order->pengunjung_id !== Auth::guard('pengunjung')->id()) {
             abort(403);
         }
+
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
 
         $cancellationRequest = $order->cancellationRequest;
 
@@ -205,13 +231,13 @@ class UserOrderController extends Controller
         if ($cancellationRequest && $cancellationRequest->status === 'rejected') {
             $cancellationRequest->update([
                 'status' => 'pending',
-                'reason' => null,
+                'reason' => $request->reason,
             ]);
         } else {
             // Otherwise, create a new request.
             CancellationRequest::create([
                 'order_id' => $order->id,
-                'reason' => null,
+                'reason' => $request->reason,
             ]);
         }
 

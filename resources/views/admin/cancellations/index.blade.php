@@ -30,15 +30,15 @@
                 </form>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover align-middle" width="100%" cellspacing="0">
+                <table class="table table-hover align-middle" cellspacing="0">
                     <thead class="table-light">
                         <tr>
                             <th>ID Pesanan</th>
                             <th>Tanggal Permintaan</th>
                             <th>Pelanggan</th>
+                            <th>Alasan Pembatalan</th>
                             <th class="text-center">Status Pesanan</th>
                             <th class="text-center">Metode Pembayaran</th>
-                            <th class="text-center">Detail</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -57,6 +57,7 @@
                                 <td>#{{ $order->id }}</td>
                                 <td>{{ $request->created_at->format('d M Y, H:i') }}</td>
                                 <td>{{ $order->name ?? 'N/A' }}</td>
+                                <td>{{ $request->reason }}</td>
                                 <td class="text-center">
                                     <span class="badge {{ $statusClass }}">{{ $order->indonesian_status }}</span>
                                 </td>
@@ -65,8 +66,6 @@
                                     <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#showOrderModal{{ $order->id }}">
                                         <i class="bi bi-eye-fill"></i> Lihat Detail
                                     </button>
-                                </td>
-                                <td class="text-center">
                                     <form action="{{ route('admin.cancellations.approve', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Anda yakin ingin menyetujui pembatalan ini?');">
                                         @csrf
                                         @method('PATCH')
@@ -132,6 +131,9 @@
                         <p class="mb-1"><strong>Metode Pembayaran:</strong> <span class="text-uppercase">{{ $order->payment_method }}</span></p>
                         <p class="mb-1"><strong>Status Pembayaran:</strong> <span class="badge {{ $paymentStatusClass }}">{{ $order->indonesian_payment_status }}</span></p>
                         <p class="mb-0"><strong>Status Pesanan:</strong> <span class="badge {{ $statusClass }}">{{ $order->indonesian_status }}</span></p>
+                        <hr>
+                        <h6>Alasan Pembatalan</h6>
+                        <p>{{ $request->reason }}</p>
                     </div>
                 </div>
                 <hr>

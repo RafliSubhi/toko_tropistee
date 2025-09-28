@@ -47,6 +47,11 @@
                     </form>
                 </div>
             </div>
+            @elseif($order->payment_status == 'waiting_confirmation')
+            <div class="alert alert-info">
+                <h5 class="alert-heading">Menunggu Konfirmasi</h5>
+                <p class="mb-0">Terima kasih! Konfirmasi pembayaran Anda telah kami terima dan sedang menunggu verifikasi oleh admin.</p>
+            </div>
             @endif
 
         </div>

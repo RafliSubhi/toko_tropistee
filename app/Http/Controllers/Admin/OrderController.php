@@ -35,7 +35,13 @@ class OrderController extends Controller
 
     public function accept(Order $order)
     {
-        $order->update(['status' => 'accepted']);
+        $updateData = ['status' => 'accepted'];
+
+        if (strtolower($order->payment_method) === 'cod') {
+            $updateData['payment_status'] = 'paid';
+        }
+
+        $order->update($updateData);
 
         UserNotification::create([
             'user_id' => $order->pengunjung_id,
@@ -43,6 +49,15 @@ class OrderController extends Controller
             'message' => 'Pesanan #' . $order->id . ' telah diterima.',
             'link' => route('pengunjung.pesanan-saya.show', $order->id),
         ]);
+
+        if (strtolower($order->payment_method) !== 'cod') {
+            UserNotification::create([
+                'user_id' => $order->pengunjung_id,
+                'order_id' => $order->id,
+                'message' => 'Bayar pesanan Anda untuk melanjutkan ke proses produksi.',
+                'link' => route('pengunjung.pesanan-saya.pembayaran', $order->id),
+            ]);
+        }
 
         return redirect()->route('admin.production.index')->with('success', 'Pesanan diterima dan dipindahkan ke Produksi.');
     }
@@ -81,44 +96,49 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        $validated = $request->validate([
-            'shipping_cost' => 'required|numeric|min:0',
-            'status' => 'sometimes|string|in:pending,processing,ready_to_ship,completed,cancelled',
-        ]);
+        $rules = [
+            'shipping_cost' => 'sometimes|required|numeric|min:0',
+            'status' => 'sometimes|required|string|in:pending,processing,ready_to_ship,completed,cancelled,done',
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|email|max:255',
+            'phone_number' => 'sometimes|required|string|max:20',
+            'delivery_address' => 'sometimes|required|string',
+            'payment_status' => 'sometimes|required|string|in:unpaid,paid,waiting_confirmation',
+            'payment_method' => 'sometimes|required|string|max:255',
+            'total_price' => 'sometimes|required|numeric|min:0',
+        ];
 
-        $subtotal = $order->products->sum(function ($product) {
-            return $product->pivot->price * $product->pivot->quantity;
-        });
+        $validated = $request->validate($rules);
 
-        $order->update([
-            'shipping_cost' => $validated['shipping_cost'],
-            'total_price' => $subtotal + $validated['shipping_cost'],
-            'status' => $validated['status'],
-            'ongkir_updated_at' => now(),
-            'ongkir_notification_seen' => false,
-        ]);
-
-        // Create notification for user
-        $message = "Status pesanan #{$order->id} Anda telah diperbarui menjadi '" . $order->indonesian_status . "'.";
-        if ($order->wasChanged('shipping_cost')) {
-            $message = "Ongkos kirim untuk pesanan #{$order->id} telah ditetapkan. Silakan lakukan pembayaran.";
+        if ($request->has('shipping_cost')) {
+            $subtotal = $order->products->sum(function ($product) {
+                return $product->pivot->price * $product->pivot->quantity;
+            });
+            $validated['total_price'] = $subtotal + $validated['shipping_cost'];
         }
 
-        UserNotification::create([
-            'user_id' => $order->pengunjung_id,
-            'order_id' => $order->id,
-            'message' => $message,
-            'link' => route('pengunjung.pesanan-saya.show', $order->id),
-        ]);
+        $order->update($validated);
 
-        return redirect()->route('admin.orders.index');
+        if ($order->wasChanged('shipping_cost')) {
+            $message = "Ongkos kirim untuk pesanan #{$order->id} telah ditetapkan. Silakan lakukan pembayaran.";
+            UserNotification::create([
+                'user_id' => $order->pengunjung_id,
+                'order_id' => $order->id,
+                'message' => $message,
+                'link' => route('pengunjung.pesanan-saya.show', $order->id),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pesanan berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Order $order)
     {
-        //
+        $order->delete();
+
+        return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil dihapus.');
     }
 }

@@ -67,6 +67,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Production
         Route::get('production', [\App\Http\Controllers\Admin\ProductionController::class, 'index'])->name('production.index');
         Route::patch('production/{order}/update-status', [\App\Http\Controllers\Admin\ProductionController::class, 'updateStatus'])->name('production.update-status');
+        Route::patch('production/{order}/update-payment-status', [\App\Http\Controllers\Admin\ProductionController::class, 'updatePaymentStatus'])->name('production.update-payment-status');
 
         // Distribution
         Route::get('distribution', [DistributionController::class, 'index'])->name('distribution.index');
@@ -93,6 +94,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('cancellations', [\App\Http\Controllers\Admin\CancellationController::class, 'index'])->name('cancellations.index');
         Route::patch('cancellations/{order}/approve', [\App\Http\Controllers\Admin\CancellationController::class, 'approve'])->name('cancellations.approve');
         Route::patch('cancellations/{order}/reject', [\App\Http\Controllers\Admin\CancellationController::class, 'reject'])->name('cancellations.reject');
+
+        // Payment Confirmation
+        Route::get('payment-confirmation', [\App\Http\Controllers\Admin\PaymentConfirmationController::class, 'index'])->name('payment_confirmation.index');
+        Route::patch('payment-confirmation/{order}/confirm', [\App\Http\Controllers\Admin\PaymentConfirmationController::class, 'confirm'])->name('payment_confirmation.confirm');
+        Route::patch('payment-confirmation/{order}/reject', [\App\Http\Controllers\Admin\PaymentConfirmationController::class, 'reject'])->name('payment_confirmation.reject');
 
         Route::middleware('role:utama')->group(function () {
             Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
@@ -135,6 +141,7 @@ Route::middleware(['auth:pengunjung', \App\Http\Middleware\PreventBrowserCaching
     Route::get('pesanan-saya/{order}', [UserOrderController::class, 'show'])->name('pesanan-saya.show');
     Route::get('pesanan-saya/{order}/pembayaran', [UserOrderController::class, 'pembayaran'])->name('pesanan-saya.pembayaran');
     Route::post('pesanan-saya/{order}/batal', [UserOrderController::class, 'cancel'])->name('pesanan-saya.cancel');
+    Route::get('pesanan-saya/{order}/cancel-reason', [UserOrderController::class, 'showCancellationReasonForm'])->name('pesanan-saya.cancel-reason');
     Route::post('pesanan-saya/{order}/request-cancellation', [UserOrderController::class, 'requestCancellation'])->name('pesanan-saya.request-cancellation');
     Route::post('pesanan-saya/{order}/konfirmasi-bayar', [UserOrderController::class, 'confirmPayment'])->name('pesanan-saya.confirm-payment');
     Route::get('pesanan-saya/{order}/cek-status', [UserOrderController::class, 'checkPaymentStatus'])->name('pesanan-saya.cek-status');

@@ -20,7 +20,7 @@
         .main-container {
             display: flex;
             flex: 1;
-            overflow: hidden; /* Prevent body scroll */
+            height: 100vh;
         }
         .sidebar {
             width: 280px;
@@ -30,6 +30,7 @@
             transition: transform 0.3s ease-in-out;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
         .sidebar .nav-pills {
             overflow-y: auto; /* Enable scrolling for the nav items */
@@ -85,9 +86,6 @@
 
         /* Responsive styles for mobile */
         @media (max-width: 991.98px) {
-            .main-container {
-                overflow-x: hidden;
-            }
             .sidebar {
                 position: fixed;
                 top: 0;
@@ -117,6 +115,11 @@
                 $unreadNotifications = \App\Models\Notification::where('is_read', false)->latest()->take(5)->get();
                 $unreadCount = $unreadNotifications->count();
                 $pendingCancellationsCount = \App\Models\CancellationRequest::where('status', 'pending')->count();
+                $pesananMasukCount = \App\Models\Order::where('status', 'pending')->count();
+                $produksiCount = \App\Models\Order::whereIn('status', ['accepted', 'processing'])->count();
+                $distribusiCount = \App\Models\Order::whereIn('status', ['ready_to_ship', 'shipped'])->count();
+                $konfirmasiPembayaranCount = \App\Models\Order::where('payment_status', 'waiting_confirmation')->count();
+                $finansialCount = \App\Models\Order::where('status', 'completed')->count();
             @endphp
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
@@ -127,7 +130,9 @@
 
                 @if(in_array(Auth::guard('admin')->user()->role, ['utama', 'pesanan', 'produksi', 'distribusi', 'finansial']))
                 <hr>
-                <li class="nav-item-header px-3 text-muted small" style="font-size: 0.8rem; text-transform: uppercase;">Manajemen Pesanan</li>
+                <li class="nav-item-header px-3 text-muted small" style="font-size: 0.8rem; text-transform: uppercase;">
+                    <span>Manajemen Pesanan</span>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.cancellations.index') }}" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('admin.cancellations.*') ? 'active' : '' }}">
                         <span><i class="bi bi-x-circle"></i> Konfirmasi Pembatalan</span>
@@ -138,34 +143,59 @@
                 </li>
                 @endif
 
+                @if(in_array(Auth::guard('admin')->user()->role, ['utama', 'finansial']))
+                @if(in_array(Auth::guard('admin')->user()->role, ['utama', 'finansial']))
+                <li class="nav-item">
+                    <a href="{{ route('admin.payment_confirmation.index') }}" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('admin.payment_confirmation.*') ? 'active' : '' }}">
+                        <span><i class="bi bi-credit-card-2-front"></i> Konfirmasi Pembayaran</span>
+                        @if($konfirmasiPembayaranCount > 0)
+                            <span class="badge bg-primary rounded-pill">{{ $konfirmasiPembayaranCount }}</span>
+                        @endif
+                    </a>
+                </li>
+                @endif
+                @endif
+
                 @if(in_array(Auth::guard('admin')->user()->role, ['utama', 'pesanan']))
                 <li class="nav-item">
-                    <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                        <i class="bi bi-inbox-fill"></i> Pesanan Masuk
+                    <a href="{{ route('admin.orders.index') }}" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                        <span><i class="bi bi-inbox-fill"></i> Pesanan Masuk</span>
+                        @if($pesananMasukCount > 0)
+                            <span class="badge bg-primary rounded-pill">{{ $pesananMasukCount }}</span>
+                        @endif
                     </a>
                 </li>
                 @endif
 
                 @if(in_array(Auth::guard('admin')->user()->role, ['utama', 'produksi']))
                 <li class="nav-item">
-                    <a href="{{ route('admin.production.index') }}" class="nav-link {{ request()->routeIs('admin.production.*') ? 'active' : '' }}">
-                        <i class="bi bi-box-seam"></i> Produksi
+                    <a href="{{ route('admin.production.index') }}" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('admin.production.*') ? 'active' : '' }}">
+                        <span><i class="bi bi-box-seam"></i> Produksi</span>
+                        @if($produksiCount > 0)
+                            <span class="badge bg-primary rounded-pill">{{ $produksiCount }}</span>
+                        @endif
                     </a>
                 </li>
                 @endif
 
                 @if(in_array(Auth::guard('admin')->user()->role, ['utama', 'distribusi']))
                 <li class="nav-item">
-                    <a href="{{ route('admin.distribution.index') }}" class="nav-link {{ request()->routeIs('admin.distribution.*') ? 'active' : '' }}">
-                        <i class="bi bi-truck"></i> Distribusi
+                    <a href="{{ route('admin.distribution.index') }}" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('admin.distribution.*') ? 'active' : '' }}">
+                        <span><i class="bi bi-truck"></i> Distribusi</span>
+                        @if($distribusiCount > 0)
+                            <span class="badge bg-primary rounded-pill">{{ $distribusiCount }}</span>
+                        @endif
                     </a>
                 </li>
                 @endif
 
                 @if(in_array(Auth::guard('admin')->user()->role, ['utama', 'finansial']))
                 <li class="nav-item">
-                    <a href="{{ route('admin.financial.index') }}" class="nav-link {{ request()->routeIs('admin.financial.*') ? 'active' : '' }}">
-                        <i class="bi bi-wallet2"></i> Finansial
+                    <a href="{{ route('admin.financial.index') }}" class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('admin.financial.*') ? 'active' : '' }}">
+                        <span><i class="bi bi-wallet2"></i> Finansial</span>
+                        @if($finansialCount > 0)
+                            <span class="badge bg-primary rounded-pill">{{ $finansialCount }}</span>
+                        @endif
                     </a>
                 </li>
                 <li class="nav-item">

@@ -29,7 +29,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle" width="100%" cellspacing="0">
+                <table class="table table-hover align-middle" cellspacing="0">
                     <thead class="table-light">
                         <tr>
                             <th>#</th>

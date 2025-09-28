@@ -37,29 +37,79 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tanggal</th>
-                            <th>Status</th>
-                            <th>Ongkir</th>
-                            <th>Total Pembayaran</th>
-                            <th>Status Pembayaran</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($orders as $order)
-                            <tr class="order-row">
-                                <td>#{{ $order->id }}</td>
-                                <td>{{ $order->created_at->format('d M Y') }}</td>
-                                <td><span class="badge bg-info text-dark">{{ Str::title(str_replace('_', ' ', $order->status)) }}</span></td>
-                                <td>{{ $order->shipping_cost > 0 ? 'Rp ' . number_format($order->shipping_cost, 0, ',', '.') : '-' }}</td>
-                                <td><strong>Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong></td>
-                                <td>
-                                    {{-- Conditional Pay Button --}}
+            <!-- Desktop View -->
+            <div class="d-none d-md-block">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th>Ongkir</th>
+                                <th>Total Pembayaran</th>
+                                <th>Status Pembayaran</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($orders as $order)
+                                <tr class="order-row">
+                                    <td>#{{ $order->id }}</td>
+                                    <td>{{ $order->created_at->format('d M Y') }}</td>
+                                    <td><span class="badge bg-info text-dark">{{ Str::title(str_replace('_', ' ', $order->status)) }}</span></td>
+                                    <td>{{ $order->shipping_cost > 0 ? 'Rp ' . number_format($order->shipping_cost, 0, ',', '.') : '-' }}</td>
+                                    <td><strong>Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong></td>
+                                    <td>
+                                        @if($order->payment_method !== 'COD' && $order->status !== 'cancelled' && $order->payment_status === 'unpaid')
+                                            @if($order->shipping_cost > 0)
+                                                <a href="{{ route('pengunjung.pesanan-saya.pembayaran', $order) }}" class="btn btn-success btn-sm">Bayar Sekarang</a>
+                                            @else
+                                                <button type="button" class="btn btn-secondary btn-sm" disabled title="Admin belum menambahkan ongkos kirim">
+                                                    Tunggu Ongkir
+                                                </button>
+                                            @endif
+                                        @else
+                                            <span class="badge bg-light text-dark">{{ $order->payment_method === 'COD' ? 'Cash on Delivery' : Str::title(str_replace('_', ' ', $order->payment_status)) }}</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detail-{{ $order->id }}" aria-expanded="false" aria-controls="detail-{{ $order->id }}">
+                                            Lihat Detail
+                                        </button>
+                                        @if(in_array($order->status, ['pending', 'accepted']))
+                                            <a href="{{ route('pengunjung.pesanan-saya.cancel-reason', $order) }}" class="btn btn-danger btn-sm">Minta Batalkan</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="collapse detail-row" id="detail-{{ $order->id }}">
+                                    <td colspan="7">
+                                        @include('pesanan-saya.partials.order-details')
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">Anda belum memiliki pesanan aktif.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile View -->
+            <div class="d-block d-md-none">
+                @forelse($orders as $order)
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Pesanan #{{ $order->id }}</h6>
+                            <span class="badge bg-info text-dark">{{ Str::title(str_replace('_', ' ', $order->status)) }}</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Tanggal:</strong> {{ $order->created_at->format('d M Y') }}</p>
+                            <p class="mb-2"><strong>Total:</strong> Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
                                     @if($order->payment_method !== 'COD' && $order->status !== 'cancelled' && $order->payment_status === 'unpaid')
                                         @if($order->shipping_cost > 0)
                                             <a href="{{ route('pengunjung.pesanan-saya.pembayaran', $order) }}" class="btn btn-success btn-sm">Bayar Sekarang</a>
@@ -71,79 +121,28 @@
                                     @else
                                         <span class="badge bg-light text-dark">{{ $order->payment_method === 'COD' ? 'Cash on Delivery' : Str::title(str_replace('_', ' ', $order->payment_status)) }}</span>
                                     @endif
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detail-{{ $order->id }}" aria-expanded="false" aria-controls="detail-{{ $order->id }}">
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detail-mobile-{{ $order->id }}" aria-expanded="false" aria-controls="detail-mobile-{{ $order->id }}">
                                         Lihat Detail
                                     </button>
-                                    @if($order->status == 'pending')
-                                        <form action="{{ route('pengunjung.pesanan-saya.request-cancellation', $order) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin meminta pembatalan pesanan ini?');">
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger btn-sm">Minta Batalkan</button>
-                                        </form>
+                                    @if(in_array($order->status, ['pending', 'accepted']))
+                                        <a href="{{ route('pengunjung.pesanan-saya.cancel-reason', $order) }}" class="btn btn-danger btn-sm">Minta Batalkan</a>
                                     @endif
-                                </td>
-                            </tr>
-                            <tr class="collapse detail-row" id="detail-{{ $order->id }}">
-                                <td colspan="7">
-                                    <div class="p-3">
-                                        <h5>Detail Pesanan #{{ $order->id }}</h5>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <strong>Alamat Pengiriman:</strong>
-                                                <p>{{ $order->delivery_address }}</p>
-                                                <strong>Metode Pembayaran:</strong>
-                                                <p>{{ $order->payment_method }}</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <strong>Rincian Biaya:</strong>
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                                        Subtotal
-                                                        <span>Rp {{ number_format($order->total_price - $order->shipping_cost, 0, ',', '.') }}</span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                                        Ongkos Kirim
-                                                        <span>{{ $order->shipping_cost > 0 ? 'Rp ' . number_format($order->shipping_cost, 0, ',', '.') : 'Belum Ditentukan' }}</span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 fw-bold">
-                                                        Grand Total
-                                                        <span>Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <h6>Keranjang yang dipesan:</h6>
-                                        <ul class="list-unstyled">
-                                            @foreach($order->products as $product)
-                                                <li class="d-flex align-items-center mb-3">
-                                                    @php
-                                                        $imageUrl = $product->image
-                                                            ? asset('storage/' . $product->image)
-                                                            : asset('images/default-product.png');
-                                                    @endphp
-                                                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="product-image me-3">
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="mb-0">{{ $product->name }}</h6>
-                                                        <small class="text-muted">{{ $product->pivot->quantity }} x Rp {{ number_format($product->pivot->price, 0, ',', '.') }}</small>
-                                                    </div>
-                                                    <div class="fw-bold">
-                                                        Rp {{ number_format($product->pivot->quantity * $product->pivot->price, 0, ',', '.') }}
-                                                    </div>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">Anda belum memiliki pesanan aktif.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse" id="detail-mobile-{{ $order->id }}">
+                            <div class="card-footer">
+                                @include('pesanan-saya.partials.order-details')
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center">
+                        <p>Anda belum memiliki pesanan aktif.</p>
+                    </div>
+                @endforelse
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4">
