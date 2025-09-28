@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin Panel - {{ $settings['store_name'] ?? 'Toko TropisTee' }}</title>
     @if(isset($logo) && $logo->favicon_path && Illuminate\Support\Facades\Storage::disk('public')->exists($logo->favicon_path))
-        <link rel="icon" type="image/png" href="{{ asset('storage/' . $logo->favicon_path) }}">
+        <link rel="icon" type="image/png" href="{{ asset('storage/app/public/' . $logo->favicon_path) }}">
     @endif
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

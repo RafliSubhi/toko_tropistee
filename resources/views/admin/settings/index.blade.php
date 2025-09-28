@@ -32,7 +32,7 @@
                             <input type="file" class="form-control" id="qris_image" name="qris_image">
                             @if(isset($settings['qris_image']) && $settings['qris_image'])
                                 <div class="mt-2 border p-2 rounded d-inline-block">
-                                    <img src="{{ asset('storage/' . $settings['qris_image']) }}" alt="QRIS Preview" style="max-height: 150px;">
+                                    <img src="{{ asset('storage/app/public/' . $settings['qris_image']) }}" alt="QRIS Preview" style="max-height: 150px;">
                                 </div>
                             @endif
                         </div>
@@ -45,7 +45,7 @@
                             <input type="file" class="form-control" id="dana_qr_code" name="dana_qr_code">
                             @if(isset($settings['dana_qr_code']) && $settings['dana_qr_code'])
                                 <div class="mt-2 border p-2 rounded d-inline-block">
-                                    <img src="{{ asset('storage/' . $settings['dana_qr_code']) }}" alt="DANA QR Preview" style="max-height: 150px;">
+                                    <img src="{{ asset('storage/app/public/' . $settings['dana_qr_code']) }}" alt="DANA QR Preview" style="max-height: 150px;">
                                 </div>
                             @endif
                         </div>
@@ -58,7 +58,7 @@
                             <input type="file" class="form-control" id="gopay_qr_code" name="gopay_qr_code">
                             @if(isset($settings['gopay_qr_code']) && $settings['gopay_qr_code'])
                                 <div class="mt-2 border p-2 rounded d-inline-block">
-                                    <img src="{{ asset('storage/' . $settings['gopay_qr_code']) }}" alt="GoPay QR Preview" style="max-height: 150px;">
+                                    <img src="{{ asset('storage/app/public/' . $settings['gopay_qr_code']) }}" alt="GoPay QR Preview" style="max-height: 150px;">
                                 </div>
                             @endif
                         </div>
@@ -71,7 +71,7 @@
                             <input type="file" class="form-control" id="ovo_qr_code" name="ovo_qr_code">
                             @if(isset($settings['ovo_qr_code']) && $settings['ovo_qr_code'])
                                 <div class="mt-2 border p-2 rounded d-inline-block">
-                                    <img src="{{ asset('storage/' . $settings['ovo_qr_code']) }}" alt="OVO QR Preview" style="max-height: 150px;">
+                                    <img src="{{ asset('storage/app/public/' . $settings['ovo_qr_code']) }}" alt="OVO QR Preview" style="max-height: 150px;">
                                 </div>
                             @endif
                         </div>

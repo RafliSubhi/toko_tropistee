@@ -5,7 +5,7 @@
             <!-- Logo and Store Name -->
             <div class="col-md-3 text-center text-md-start mb-3 mb-md-0 d-flex align-items-center justify-content-center justify-content-md-start">
                 @if($logo && $logo->logo_path && Storage::disk('public')->exists($logo->logo_path))
-                    <img src="{{ asset('storage/' . $logo->logo_path) }}" alt="Logo Footer" style="height: 50px; width: 50px; border-radius: 50%; object-fit: cover;">
+                    <img src="{{ asset('storage/app/public/' . $logo->logo_path) }}" alt="Logo Footer" style="height: 50px; width: 50px; border-radius: 50%; object-fit: cover;">
                 @endif
                 <span class="ms-2 fw-bold">{{ $settings['store_name'] ?? 'TropisTee' }}</span>
             </div>

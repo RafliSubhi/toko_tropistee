@@ -38,7 +38,7 @@
                                     <label for="logo" class="form-label">Upload Logo</label>
                                     <input type="file" name="logo" id="logo" class="form-control" onchange="previewImage(event, 'logo-preview')">
                                     <small class="form-text text-muted">Rekomendasi ukuran: 200x50 pixel. Format: PNG, JPG, SVG.</small>
-                                    <img id="logo-preview" src="{{ $logo && $logo->logo_path ? asset('storage/' . $logo->logo_path) : '#' }}" alt="Logo Preview" class="img-thumbnail mt-2" style="max-height: 50px; {{ !($logo && $logo->logo_path) ? 'display:none;' : '' }}">
+                                    <img id="logo-preview" src="{{ $logo && $logo->logo_path ? asset('storage/app/public/' . $logo->logo_path) : '#' }}" alt="Logo Preview" class="img-thumbnail mt-2" style="max-height: 50px; {{ !($logo && $logo->logo_path) ? 'display:none;' : '' }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -46,7 +46,7 @@
                                     <label for="favicon" class="form-label">Upload Favicon</label>
                                     <input type="file" name="favicon" id="favicon" class="form-control" onchange="previewImage(event, 'favicon-preview')">
                                     <small class="form-text text-muted">Ukuran: 32x32 atau 16x16 pixel. Format: PNG, ICO.</small>
-                                    <img id="favicon-preview" src="{{ $logo && $logo->favicon_path ? asset('storage/' . $logo->favicon_path) : '#' }}" alt="Favicon Preview" class="img-thumbnail mt-2" style="max-height: 32px; {{ !($logo && $logo->favicon_path) ? 'display:none;' : '' }}">
+                                    <img id="favicon-preview" src="{{ $logo && $logo->favicon_path ? asset('storage/app/public/' . $logo->favicon_path) : '#' }}" alt="Favicon Preview" class="img-thumbnail mt-2" style="max-height: 32px; {{ !($logo && $logo->favicon_path) ? 'display:none;' : '' }}">
                                 </div>
                             </div>
                         </div>

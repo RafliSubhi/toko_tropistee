@@ -5,7 +5,7 @@
     <section id="beranda" class="py-5 text-center bg-light">
         <div class="container">
             @if($logo && $logo->logo_path && Storage::disk('public')->exists($logo->logo_path))
-                <img src="{{ asset('storage/' . $logo->logo_path) }}" alt="Logo Toko" class="mb-4 rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
+                <img src="{{ asset('storage/app/public/' . $logo->logo_path) }}" alt="Logo Toko" class="mb-4 rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
             @endif
             <h1 class="display-4 fw-bold">{{ $settings['welcome_greeting'] ?? 'Selamat Datang di TropisTee' }}</h1>
             <p class="lead text-muted">{{ $settings['slogan'] ?? 'Slogan toko Anda akan tampil di sini.' }}</p>
@@ -61,7 +61,7 @@
                 @forelse ($teamMembers as $member)
                     <div class="col-lg-3 col-md-6">
                         <div class="card team-card h-100 shadow-sm border-0 text-center" data-bs-toggle="modal" data-bs-target="#teamMemberModal{{ $member->id }}">
-                            <img src="{{ asset('storage/' . $member->image_path) }}" class="card-img-top" alt="Foto {{ $member->name }}" style="height: 250px; object-fit: cover;">
+                            <img src="{{ asset('storage/app/public/' . $member->image_path) }}" class="card-img-top" alt="Foto {{ $member->name }}" style="height: 250px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title fw-bold">{{ $member->name }}</h5>
                                 <p class="card-text text-primary">{{ $member->position }}</p>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="text-center mb-4">
-                        <img src="{{ asset('storage/' . $member->image_path) }}" class="rounded-circle shadow-sm mb-3" alt="Foto {{ $member->name }}" style="width: 150px; height: 150px; object-fit: cover;">
+                        <img src="{{ asset('storage/app/public/' . $member->image_path) }}" class="rounded-circle shadow-sm mb-3" alt="Foto {{ $member->name }}" style="width: 150px; height: 150px; object-fit: cover;">
                         <h3 class="fw-bold">{{ $member->name }}</h3>
                         <p class="text-primary fs-5">{{ $member->position }}</p>
                     </div>

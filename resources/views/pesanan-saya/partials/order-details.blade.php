@@ -32,7 +32,7 @@
             <li class="d-flex align-items-center mb-3">
                 @php
                     $imageUrl = $product->image
-                        ? asset('storage/' . $product->image)
+                        ? asset('storage/app/public/' . $product->image)
                         : asset('images/default-product.png');
                 @endphp
                 <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="product-image me-3">

@@ -25,7 +25,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : 'https://via.placeholder.com/100' }}" 
+                                        <img src="{{ $item->product->image ? asset('storage/app/public/' . $item->product->image) : 'https://via.placeholder.com/100' }}" 
                                              alt="{{ $item->product->name }}" class="img-fluid rounded me-3" style="width: 100px; height: 100px; object-fit: cover;">
                                         <div>
                                             <h5 class="mb-0">{{ $item->product->name }}</h5>
@@ -66,7 +66,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
-                                <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : 'https://via.placeholder.com/100' }}" 
+                                <img src="{{ $item->product->image ? asset('storage/app/public/' . $item->product->image) : 'https://via.placeholder.com/100' }}" 
                                      alt="{{ $item->product->name }}" class="img-fluid rounded" style="object-fit: cover; height: 100%;">
                             </div>
                             <div class="col-8">

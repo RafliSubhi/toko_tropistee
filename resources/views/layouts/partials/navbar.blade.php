@@ -2,7 +2,7 @@
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
             @if($logo && $logo->logo_path && Storage::disk('public')->exists($logo->logo_path))
-                <img src="{{ asset('storage/' . $logo->logo_path) }}" alt="Logo" style="height: 30px; width: 30px; border-radius: 50%; object-fit: cover;" class="me-2">
+                <img src="{{ asset('storage/app/public/' . $logo->logo_path) }}" alt="Logo" style="height: 30px; width: 30px; border-radius: 50%; object-fit: cover;" class="me-2">
             @endif
             <span class="fw-bold">{{ $settings['store_name'] ?? 'TropisTee' }}</span>
         </a>

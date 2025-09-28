@@ -53,7 +53,7 @@
                             <div class="form-text">Kosongkan jika tidak ingin mengubah gambar.</div>
                             
                             <p class="mt-3">Gambar saat ini:</p>
-                            <img id="image-preview" src="{{ $product->image ? asset('storage/' . $product->image) : '#' }}" alt="Image Preview" class="img-thumbnail" style="max-height: 200px; {{ !$product->image ? 'display: none;' : '' }}">
+                            <img id="image-preview" src="{{ $product->image ? asset('storage/app/public/' . $product->image) : '#' }}" alt="Image Preview" class="img-thumbnail" style="max-height: 200px; {{ !$product->image ? 'display: none;' : '' }}">
                         </div>
                     </div>
                 </div>

@@ -58,7 +58,7 @@
                             <label for="image_path" class="form-label">Foto</label>
                             <input class="form-control" type="file" id="image_path" name="image_path" onchange="previewImage(event)">
                             <div class="form-text">Kosongkan jika tidak ingin mengubah foto.</div>
-                            <img id="image-preview" src="{{ $teamMember->image_path ? asset('storage/' . $teamMember->image_path) : '#' }}" alt="Image Preview" class="img-thumbnail mt-3" style="max-height: 200px; {{ !$teamMember->image_path ? 'display: none;' : '' }}">
+                            <img id="image-preview" src="{{ $teamMember->image_path ? asset('storage/app/public/' . $teamMember->image_path) : '#' }}" alt="Image Preview" class="img-thumbnail mt-3" style="max-height: 200px; {{ !$teamMember->image_path ? 'display: none;' : '' }}">
                         </div>
                     </div>
                 </div>

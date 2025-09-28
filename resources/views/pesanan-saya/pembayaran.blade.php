@@ -29,7 +29,7 @@
                         <h5 class="text-center fw-bold">{{ strtoupper($order->payment_method) }}</h5>
                         <p class="text-center text-muted">Silakan scan QR code di bawah ini untuk menyelesaikan pembayaran dengan {{ strtoupper($order->payment_method) }}.</p>
                         <div class="text-center p-3 border rounded">
-                            <img src="{{ asset('storage/' . $qrCodePath) }}" alt="QR Code {{ strtoupper($order->payment_method) }}" class="img-fluid rounded" style="max-height: 300px;">
+                            <img src="{{ asset('storage/app/public/' . $qrCodePath) }}" alt="QR Code {{ strtoupper($order->payment_method) }}" class="img-fluid rounded" style="max-height: 300px;">
                         </div>
 
                         <hr class="my-4">

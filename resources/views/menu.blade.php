@@ -33,7 +33,7 @@
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 250px; object-fit: cover;">
+                        <img src="{{ asset('storage/app/public/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 250px; object-fit: cover;">
                     @else
                         <img src="https://via.placeholder.com/300x250.png?text=No+Image" class="card-img-top" alt="No Image">
                     @endif

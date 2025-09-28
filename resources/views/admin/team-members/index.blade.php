@@ -50,7 +50,7 @@
                                 <td>{{ $loop->iteration + $teamMembers->firstItem() - 1 }}</td>
                                 <td>
                                     @if($member->image_path)
-                                        <img src="{{ asset('storage/' . $member->image_path) }}" alt="{{ $member->name }}" class="img-thumbnail" width="80">
+                                        <img src="{{ asset('storage/app/public/' . $member->image_path) }}" alt="{{ $member->name }}" class="img-thumbnail" width="80">
                                     @else
                                         <span class="text-muted">No Image</span>
                                     @endif

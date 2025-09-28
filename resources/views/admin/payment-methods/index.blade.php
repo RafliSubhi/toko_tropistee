@@ -40,7 +40,7 @@
         <div class="card-body">
             <div class="text-center">
                 @if($qris_image_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($qris_image_path))
-                    <img src="{{ asset('storage/' . $qris_image_path) }}" alt="QRIS Code" class="img-fluid img-thumbnail" style="max-height: 250px;">
+                    <img src="{{ asset('storage/app/public/' . $qris_image_path) }}" alt="QRIS Code" class="img-fluid img-thumbnail" style="max-height: 250px;">
                 @else
                     <p class="text-muted">Gambar QRIS belum diatur.</p>
                 @endif

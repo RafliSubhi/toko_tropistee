@@ -31,7 +31,7 @@
         <div class="card-body p-5">
             <div class="text-center mb-4">
                 @if($logo && $logo->logo_path && Illuminate\Support\Facades\Storage::disk('public')->exists($logo->logo_path))
-                    <img src="{{ asset('storage/' . $logo->logo_path) }}" alt="Logo Toko" class="mb-3 rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+                    <img src="{{ asset('storage/app/public/' . $logo->logo_path) }}" alt="Logo Toko" class="mb-3 rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
                 @endif
                 <h3 class="card-title fw-bold">Admin Panel Login</h3>
                 <p class="text-muted">Silakan login untuk melanjutkan</p>

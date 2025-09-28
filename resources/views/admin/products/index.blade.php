@@ -50,7 +50,7 @@
                                 <td>{{ $loop->iteration + $products->firstItem() - 1 }}</td>
                                 <td>
                                     @if($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-thumbnail" width="80">
+                                        <img src="{{ asset('storage/app/public/' . $product->image) }}" alt="{{ $product->name }}" class="img-thumbnail" width="80">
                                     @else
                                         <span class="text-muted">No Image</span>
                                     @endif
