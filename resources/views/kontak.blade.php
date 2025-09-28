@@ -15,8 +15,6 @@
                     <div class="map-responsive">
                         <iframe
                             src="{{ $settings['google_maps_url'] }}"
-                            width="600" 
-                            height="450" 
                             style="border:0;" 
                             allowfullscreen="" 
                             loading="lazy" 
@@ -69,4 +67,23 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    .map-responsive {
+        overflow: hidden;
+        padding-bottom: 56.25%;
+        position: relative;
+        height: 0;
+    }
+
+    .map-responsive iframe {
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+    }
+</style>
+@endpush
 
